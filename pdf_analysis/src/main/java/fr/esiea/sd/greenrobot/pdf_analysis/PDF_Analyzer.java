@@ -28,6 +28,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 import fr.esiea.sd.greenrobot.pdf_analysis.extraction.KeywordsExtractor;
+import fr.esiea.sd.greenrobot.pdf_analysis.graph.KeywordsGraphBuilder;
 
 /**
  * @author nic0w
@@ -72,9 +73,11 @@ public class PDF_Analyzer implements Callable<Object> {
 	}
 	
 	@Override
-	public Object call() throws Exception {
+	public KeywordsGraphBuilder call() throws Exception {
 		
 		Multimap<String, Integer> keywords = filtrateKeywords(extractKeywords(this.pdfDocument));
+		
+		
 		
 		
 

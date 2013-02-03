@@ -30,7 +30,7 @@ public class KeywordsExtractor implements Callable<Multimap<String, Integer>> {
 		
 		ExecutorService unitExecutor = Executors.newFixedThreadPool(nbCores);
 		
-		//Mono thread !s
+		//Mono thread !
 		Future<Multimap<String, Integer>> result = unitExecutor.submit(new KeywordsExtractorUnit(this.pdfDocument));
 		
 		
