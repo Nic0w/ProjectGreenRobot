@@ -15,8 +15,8 @@ public interface IgnoredWords {
 		"quelqu'un quelqu'une quelques uns quelques unes personne autrui quiconque d’aucuns afin façon avec egalement entre soit " +
 		"mais donc or ni car sauf sinon parce que qui quand à dont pour les de des à du sur jusqu’au bref propos fois c " +
 		"dans et plus au a été chaque eu ont par notre aux plupart assez cet cette pas nos sous fin ne ainsi n ou non auprès " +
-		"suis es est sommes êtes sont être " +
-		"ai as a avons avez ont " +
+		"suis es est sommes êtes sont être aussi " +
+		"ai as a avons avez ont ma depuis grâce " +
 		" devrait devraient" +
 		" mis puisse doivent doit puissent fait " +
 		" un deux trois quatre cinq six sept huit neuf dix "

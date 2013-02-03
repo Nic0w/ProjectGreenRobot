@@ -85,7 +85,7 @@ public class PDF_Analyzer implements Callable<Object> {
 			System.out.println("Added " + keywords.asMap().keySet().size() + " unique words after filtering.");
 			System.out.println();
 			
-			File out = new File("out.txt");
+			File out = new File("out.csv");
 			
 			BufferedWriter bw = new BufferedWriter(new FileWriter(out));
 			

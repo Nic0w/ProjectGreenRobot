@@ -28,5 +28,6 @@
   </dependencies>
   <modules>
   	<module>pdf_analysis</module>
+  	<module>website</module>
   </modules>
 </project>

@@ -9,7 +9,7 @@ import java.util.TreeSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-public class KeywordsGraph extends TreeSet<Keyword> {
+public class KeywordsGraph {
 	
 	
 	

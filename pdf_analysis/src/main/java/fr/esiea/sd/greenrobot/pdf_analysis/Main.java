@@ -22,7 +22,7 @@ public class Main {
     	
     	PDDocument pdfDoc = null;
     	
-    	pdfDoc = PDDocument.load(new File("alcatel_lucent_fr_2011.pdf"));
+    	pdfDoc = PDDocument.load(new File("bnp_2010.pdf"));
     	
     	PDFTextStripper stripper = new PDFTextStripper();
     	
@@ -37,31 +37,31 @@ public class Main {
     	/*for(String word : IgnoredWords.ignoreList)
     		System.out.println("'" + word + "'");*/
     	
-    	/*File out = new File("out.txt");
+    //	File out = new File("out.txt");
     	
-    	FileWriter writer = new FileWriter(out);
+    	//FileWriter writer = new FileWriter(out);
     	
     	//stripper.writeText(pdfDoc, writer);
     	
-    	writer.flush();
-    	writer.close();
+    	//writer.flush();
+    //	writer.close();
     	
-    	Scanner words = new Scanner(stripper.getText(pdfDoc)).useDelimiter("\\. ");
+    	//Scanner words = new Scanner(stripper.getText(pdfDoc)).useDelimiter("\\. ");
     	
-    	TreeMultiset<String> histogram = TreeMultiset.create();
+    	//TreeMultiset<String> histogram = TreeMultiset.create();
     	
-    	String word = "";
-    	int count = 0;
-    	while(words.hasNext()) {
+    	//String word = "";
+    	//int count = 0;
+    	//while(words.hasNext()) {
     		//histogram.add(words.next());
-    		System.out.println("'"+words.next()+"'");
-    		count++; 
-    	}
+    		//System.out.println("'"+words.next()+"'");
+    		//count++; 
+    	//}
     	
-    	System.out.println(/*histogram.entrySet().size() + " distinct words in this document. " + count + " words");
+    //	System.out.println(/*histogram.entrySet().size() + " distinct words in this document. " + count + " words");
     	
 
-    	*/
+    	
     	
         System.out.println( "Hello World!" );
     }
