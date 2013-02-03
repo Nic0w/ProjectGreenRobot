@@ -6,4 +6,12 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>website</artifactId>
+  <packaging>war</packaging>
+  <dependencies>
+  	<dependency>
+  		<groupId>fr.esiea.sd.greenrobot.pdf_analysis</groupId>
+  		<artifactId>pdf_analysis</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>
