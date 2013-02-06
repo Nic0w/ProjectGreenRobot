@@ -27,7 +27,7 @@ public class ExtractionSession {
 			e.printStackTrace();
 		}
 		
-		return null;	
+		return bytesToHex(md5);	
 	}
 
 }
