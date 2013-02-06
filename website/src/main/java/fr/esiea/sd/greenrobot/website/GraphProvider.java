@@ -74,7 +74,7 @@ public class GraphProvider extends HttpServlet {
 		else if(true) {
 			
 			if(i>0) {
-				out.printf("<script type=\"text/javascript\"> getProgress('noob'); </script>\n%d\n", i--);
+				out.printf("<script type=\"text/javascript\"> function update() { getProgress('noob'); } setTimeout(update, 1500); </script>\n%d\n", i--);
 				
 			}
 			else {
