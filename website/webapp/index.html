@@ -2,9 +2,70 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Test</title>
+<link rel="stylesheet" href="dd_style.css" media="screen"
+	type="text/css" />
+<title>Développement Durable - Analyse automatisée de rapports</title>
 </head>
 <body>
-	Noob :)
+	<br/>
+	<br/>
+	<div align="center">
+		<H1>Développement Durable</H1>
+	</div>
+	<br/>
+	<br/>
+	<div id="parcourir">
+		<p align="right">
+		
+		<form name="file_upload" action="/PDFReceiver" method="post"
+			enctype="multipart/form-data">
+			
+			<input type="file" name="file" /> 
+			<br/>
+			<input type="submit" name="send_file"
+				value="Traiter ce fichier"
+				style="background-color: #F5FFFA"
+				style="color:white; font-weight:bold">
+		</form>
+
+		</p>
+
+
+	</div>
+	<form method="post" action="traitement.php">
+		<p align="right">
+			<label for="pseudo">URL du rapport :</label> <input type="text"
+				name="URL" id="URL" size="50" maxlength="50" />
+	</form>
+
+
+
+	<div id="contenu">
+		<p>
+		<BLOCKQUOTE>
+			<div style="width: 500px; height: 100px; border: 1px solid #000;">
+				Bienvenue sur notre site. </br> Nous évaluons le pourcentage de
+				developpement durable de la société de votre choix.</br> Notre principe ?
+				Il est très simple </br>
+			</div>
+		</BLOCKQUOTE>
+		</p>
+
+	</div>
+
+	<br/>
+	<br/>
+	<br/>
+
+	<div id="bouton">
+		<p align="right">
+
+			<input type="button" name="lien1" value="Traiter"
+				onclick="self.location.href='lien.html'"
+				style="background-color: #F5FFFA"
+				style="color:white; font-weight:bold" onclick>
+
+		</p>
+	</div>
 </body>
 </html>

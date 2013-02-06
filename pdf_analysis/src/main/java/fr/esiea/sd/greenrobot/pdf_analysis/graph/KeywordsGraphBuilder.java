@@ -1,5 +1,6 @@
 package fr.esiea.sd.greenrobot.pdf_analysis.graph;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -44,7 +45,7 @@ public class KeywordsGraphBuilder {
 		return mean;
 	}
 	
-	public KeywordsGraph buildGraphFor(int maxDepth, float neighborMaxDistance, Keyword ...selectedKeywords) {
+	public List<Keyword> buildGraphFor(int maxDepth, float neighborMaxDistance, Keyword ...selectedKeywords) {
 		
 		float distance;
 		
@@ -62,14 +63,11 @@ public class KeywordsGraphBuilder {
 				
 				if(distance <= neighborMaxDistance)
 					linkKeywords(a, b, distance);
-			}
+			}	
 		}
 		
-
 		
-		
-		
-		return null;
+		return Arrays.asList(selectedKeywords);
 	}
 	
 	

@@ -1,0 +1,12 @@
+body {
+
+/*  width: 1100px; */
+ margin: 30; 
+ background-color: #6495ED; 
+ font-family: Verdana, sans-serif; 
+ font-size: 100%;
+ text-align: center;
+ 
+ border:6px outset blue; 
+}
+
