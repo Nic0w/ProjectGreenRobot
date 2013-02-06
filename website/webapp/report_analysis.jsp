@@ -43,6 +43,15 @@
 </script>
 </head>
 <body>
-	<div id="progress"></div>
+	<table>
+		<tr>
+		<td>
+		Noob
+		</td>
+		<td>
+			<div id="progress"></div>
+		</td>
+		</tr>
+	</table>
 </body>
 </html>
