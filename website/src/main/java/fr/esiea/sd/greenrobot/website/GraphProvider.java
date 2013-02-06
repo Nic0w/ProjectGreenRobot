@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -52,12 +53,8 @@ public class GraphProvider extends HttpServlet {
 			
 			analyzer = new PDF_Analyzer(pdfDoc);
 			
-			try {
-				analyzer.call();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Executors.newSingleThreadExecutor().submit(analyzer);
+			
 			
 			analyzers.put(hash, analyzer);
 	
