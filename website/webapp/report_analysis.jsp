@@ -8,14 +8,31 @@
 <script src="/website-0.0.1-SNAPSHOT/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript">
 
+
+	var servlet = "/website-0.0.1-SNAPSHOT/GraphProvider";
 	var filename="<%= request.getParameter("file") %>";
 	
-	function test() {
+	function getProgress(hash) {
 		
-		$("#progress").load('/website-0.0.1-SNAPSHOT/GraphProvider');
-		
+		$("#progress").load(
+				servlet,
+				{ hash: hash }
+		);
 	}
 	
+	function loadReport() {
+		
+		$.post(servlet, 
+			{
+				'file' :  filename 
+			},
+			function(data) {
+				  
+				console.log("Received hash : " + data);
+				getProgress(data);	
+			}
+		);	
+	}
 	
 	function progress(noob) {
 		

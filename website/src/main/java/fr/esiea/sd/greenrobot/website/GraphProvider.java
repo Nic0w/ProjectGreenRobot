@@ -2,6 +2,8 @@ package fr.esiea.sd.greenrobot.website;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -31,6 +33,20 @@ public class GraphProvider extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
+    
+    private static String bytesToHex(byte[] bytes) {
+        final char[] hexArray = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+        char[] hexChars = new char[bytes.length * 2];
+        int v;
+        for ( int j = 0; j < bytes.length; j++ ) {
+            v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
+    
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -39,20 +55,34 @@ public class GraphProvider extends HttpServlet {
 		int i = 20;
 		
 		PrintWriter out = response.getWriter();
-		
-		while(i>0) {
+		String file;
+		if((file=request.getParameter("file"))!=null) {
 			
-			out.printf("<script type=\"text/javascript\"> progress(%d); </script>\n", i);
-			out.flush();
+			byte md5[] = {};
 			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				md5 = MessageDigest.getInstance("MD5").digest((file + "" + System.currentTimeMillis()).getBytes());
+			} catch (NoSuchAlgorithmException e) {
 				e.printStackTrace();
-				break;
 			}
-			i--;
+			
+			String hash = bytesToHex(md5);
+			
+			out.printf("%s", hash);
 		}
+		else if(true) {
+			
+			if(i>0) {
+				out.printf("<script type=\"text/javascript\"> getProgress('noob'); </script>\n%d\n", i);
+				i--;
+			}
+			else {
+				out.printf("LOADED OMG\n");
+			}
+		}
+		
+		
+			//
+
 		
 		out.flush();
 		out.close();
