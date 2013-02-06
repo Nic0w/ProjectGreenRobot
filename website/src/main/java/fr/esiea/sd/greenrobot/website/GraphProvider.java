@@ -52,6 +52,13 @@ public class GraphProvider extends HttpServlet {
 			
 			analyzer = new PDF_Analyzer(pdfDoc);
 			
+			try {
+				analyzer.call();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			analyzers.put(hash, analyzer);
 	
 			out.printf("%s", hash);
