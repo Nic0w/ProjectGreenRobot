@@ -26,6 +26,7 @@ public class GraphProvider extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 
+	private static int i;
     /**
      * Default constructor. 
      */
@@ -52,7 +53,7 @@ public class GraphProvider extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int i = 20;
+		
 		
 		PrintWriter out = response.getWriter();
 		String file;
@@ -67,13 +68,14 @@ public class GraphProvider extends HttpServlet {
 			
 			String hash = bytesToHex(md5);
 			
+			i=20;
 			out.printf("%s", hash);
 		}
 		else if(true) {
 			
 			if(i>0) {
-				out.printf("<script type=\"text/javascript\"> getProgress('noob'); </script>\n%d\n", i);
-				i--;
+				out.printf("<script type=\"text/javascript\"> getProgress('noob'); </script>\n%d\n", i--);
+				
 			}
 			else {
 				out.printf("LOADED OMG\n");
