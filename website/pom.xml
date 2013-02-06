@@ -25,6 +25,11 @@
   		<artifactId>pdf_analysis</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
+  	<dependency>
+  		<groupId>org.apache.tomcat</groupId>
+  		<artifactId>tomcat-servlet-api</artifactId>
+  		<version>7.0.35</version>
+  	</dependency>
   </dependencies>
   
 </project>
