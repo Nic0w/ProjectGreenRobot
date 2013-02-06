@@ -70,7 +70,7 @@ public class GraphProvider extends HttpServlet {
 					"function update() { getProgress('%s'); } " +
 					//" setTimeout(update, 1000); "+
 					"</script>\n"+ 
-					"%d % du document traité...\n", hash, progress);
+					"%d %% du document traité...\n", hash, progress);
 				
 			}
 			else {
