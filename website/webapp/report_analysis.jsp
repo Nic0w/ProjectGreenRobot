@@ -22,7 +22,7 @@
 	
 	function loadReport() {
 		
-		$.post(servlet, 
+		$.get(servlet, 
 			{
 				'file' :  filename 
 			},
