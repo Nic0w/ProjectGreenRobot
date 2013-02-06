@@ -16,7 +16,7 @@
 		
 		$("#progress").load(
 				servlet,
-				{ hash: hash }
+				'?hash='+hash
 		);
 	}
 	
