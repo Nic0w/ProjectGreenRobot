@@ -27,32 +27,34 @@ import fr.esiea.sd.greenrobot.pdf_analysis.filtering.WordFilter;
 public class KeywordsExtractorUnit implements Callable<Multimap<String, Integer>> {
 
 	private final PDDocument pdfDocument;
-	
+	private final PagesCounter counter;
 	private final ContiguousSet<Integer> pagesRange;
 	
 	/**
 	 * 
 	 */
-	public KeywordsExtractorUnit(PDDocument pdfDocument) {
-		this(pdfDocument, 1, pdfDocument.getNumberOfPages());
+	public KeywordsExtractorUnit(PDDocument pdfDocument, PagesCounter counter) {
+		this(pdfDocument, 1, pdfDocument.getNumberOfPages(), counter);
 	}
 
 	/**
 	 * 
 	 */
-	public KeywordsExtractorUnit(PDDocument pdfDocument, int page) {
-		this(pdfDocument, page, page);
+	public KeywordsExtractorUnit(PDDocument pdfDocument, int page, PagesCounter counter) {
+		this(pdfDocument, page, page, counter);
 	}
 	
 	
 	/**
 	 * 
 	 */
-	public KeywordsExtractorUnit(PDDocument pdfDocument, int startPage, int endPage) {
+	public KeywordsExtractorUnit(PDDocument pdfDocument, int startPage, int endPage, PagesCounter counter) {
 		
 		this.pdfDocument = pdfDocument;
 		
 		this.pagesRange = Ranges.closed(startPage, endPage).asSet(DiscreteDomains.integers());
+		
+		this.counter = counter;
 	}
 	
 	@Override
@@ -73,7 +75,7 @@ public class KeywordsExtractorUnit implements Callable<Multimap<String, Integer>
 			textExtractor.setStartPage(page);
 			textExtractor.setEndPage(page);
 			
-			System.out.printf("Extracting keywords from page %d of %d.\n", page, this.pagesRange.last());
+			//System.out.printf("Extracting keywords from page %d of %d.\n", page, this.pagesRange.last());
 			
 			rawText = textExtractor.getText(pdfDocument);
 			
@@ -90,6 +92,7 @@ public class KeywordsExtractorUnit implements Callable<Multimap<String, Integer>
 			}
 			
 			words.close();
+			if(counter!=null) counter.addOnePage();
 		}
 		
 	

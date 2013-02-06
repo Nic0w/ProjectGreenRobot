@@ -28,6 +28,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
+import fr.esiea.sd.greenrobot.pdf_analysis.extraction.ExtractionWatcher;
 import fr.esiea.sd.greenrobot.pdf_analysis.extraction.KeywordsExtractor;
 import fr.esiea.sd.greenrobot.pdf_analysis.graph.KeywordFactory;
 import fr.esiea.sd.greenrobot.pdf_analysis.graph.KeywordsGraphBuilder;
@@ -41,6 +42,8 @@ public class PDF_Analyzer implements Callable<Object> {
 	private final PDDocument pdfDocument;
 	private final HashMultimap<String, Integer> keywords;
 
+	private KeywordsExtractor extractor;
+	
 	/**
 	 * 
 	 */
@@ -53,7 +56,7 @@ public class PDF_Analyzer implements Callable<Object> {
 
 		ExecutorService extractorExecutor = Executors.newSingleThreadExecutor();
 
-		KeywordsExtractor extractor = new KeywordsExtractor(this.pdfDocument);
+		this.extractor = new KeywordsExtractor(this.pdfDocument);
 
 		Future<Multimap<String, Integer>> extractorResult = extractorExecutor.submit(extractor);
 
@@ -74,6 +77,15 @@ public class PDF_Analyzer implements Callable<Object> {
 		return keywords;
 	}
 
+	public void registerExtractionWatcher(ExtractionWatcher watcher) {
+	
+		
+	}
+	
+	public int getExtractionProgress() {
+		return this.extractor.getExtractionProgress();
+	}
+	
 	@Override
 	public KeywordsGraphBuilder call() throws Exception {
 
