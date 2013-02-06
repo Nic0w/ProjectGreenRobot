@@ -62,7 +62,7 @@ public class PDFReceiver extends HttpServlet {
 	                String fieldname = item.getFieldName();
 	                String filename = item.getName();
 
-	                File uploaded = File.createTempFile(filename, "greenrobot");
+	                File uploaded = File.createTempFile("greenrobot", null);
 	                FileOutputStream fileOut = new FileOutputStream(uploaded);
 	                
 	                fileOut.write(item.get());
