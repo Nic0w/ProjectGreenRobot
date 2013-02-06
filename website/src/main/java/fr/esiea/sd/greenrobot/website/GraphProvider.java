@@ -68,12 +68,18 @@ public class GraphProvider extends HttpServlet {
 				out.printf(
 					"<script type=\"text/javascript\">" +
 					"function update() { getProgress('%s'); } " +
-					" setTimeout(update, 50); "+
+					" setTimeout(update, 500); "+
 					"</script>\n"+ 
-					"%d %% du document traité...\n", hash, progress);
+					"%d %% \n", hash, progress);
 				
 			}
 			else {
+				
+				out.
+					append("<script type=\"text/javascript\">").
+					append("</script>\n");
+				
+				
 				out.printf("LOADED OMG\n");
 			}
 		}
