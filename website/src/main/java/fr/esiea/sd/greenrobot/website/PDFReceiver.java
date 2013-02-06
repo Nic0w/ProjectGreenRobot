@@ -69,8 +69,11 @@ public class PDFReceiver extends HttpServlet {
 	                fileOut.flush();
 	                fileOut.close();
 	                
-	                response.getWriter().printf("User uploaded a file of " + item.getSize() + " bytes named " + filename +"\n <br\\>\n");
-	                response.getWriter().printf("File is now named " + uploaded.getName() + "(" + uploaded.getAbsolutePath() + ")\n");
+	                //response.getWriter().printf("User uploaded a file of " + item.getSize() + " bytes named " + filename +"\n <br\\>\n");
+	                //response.getWriter().printf("File is now named " + uploaded.getName() + "(" + uploaded.getAbsolutePath() + ")\n");
+	                
+	                response.sendRedirect("/website-0.0.1-SNAPSHOT/report_analysis.jsp?file="+uploaded.getName());
+	                break;
 	            }
 	        }
 	    } catch (FileUploadException e) {
