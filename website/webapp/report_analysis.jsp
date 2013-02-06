@@ -9,10 +9,23 @@
 <script type="text/javascript">
 
 	var filename="<%= request.getParameter("file") %>";
+	
+	function test() {
+		
+		$.load('/website-0.0.1-SNAPSHOT/GraphProvider');
+		
+	}
+	
+	
+	function progress(noob) {
+		
+		$("#progress").html(noob);
+		
+	}
 
 </script>
 </head>
 <body>
-	<div id=""></div>
+	<div id="progress"></div>
 </body>
 </html>

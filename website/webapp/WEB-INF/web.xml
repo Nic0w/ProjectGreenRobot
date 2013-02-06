@@ -15,10 +15,17 @@
 	<servlet>
 		<display-name>PDFReceiver</display-name>
 		<servlet-name>PDFReceiver</servlet-name>
-		<servlet-class>
-			fr.esiea.sd.greenrobot.website.PDFReceiver
-		</servlet-class>
+		<servlet-class>fr.esiea.sd.greenrobot.website.PDFReceiver</servlet-class>
 	</servlet>
+	<servlet>
+		<display-name>GraphProvider</display-name>
+		<servlet-name>GraphProvider</servlet-name>
+		<servlet-class>fr.esiea.sd.greenrobot.website.GraphProvider</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GraphProvider</servlet-name>
+		<url-pattern>/GraphProvider</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>PDFReceiver</servlet-name>
 		<url-pattern>/PDFReceiver</url-pattern>
