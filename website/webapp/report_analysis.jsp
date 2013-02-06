@@ -12,7 +12,7 @@
 	
 	function test() {
 		
-		$.load('/website-0.0.1-SNAPSHOT/GraphProvider');
+		$("#progress").load('/website-0.0.1-SNAPSHOT/GraphProvider');
 		
 	}
 	

@@ -42,7 +42,7 @@ public class GraphProvider extends HttpServlet {
 		
 		while(i>0) {
 			
-			out.printf("<script type=\"text/javascript\"> progress(%d); </script>", i);
+			out.printf("<script type=\"text/javascript\"> progress(%d); </script>\n", i);
 			out.flush();
 			try {
 				Thread.sleep(1000);
