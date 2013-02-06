@@ -45,6 +45,10 @@ public class KeywordsGraphBuilder {
 		return mean;
 	}
 	
+	public List<Keyword> getAllKeywords() {
+		return this.keywords;
+	}
+	
 	public List<Keyword> buildGraphFor(int maxDepth, float neighborMaxDistance, Keyword ...selectedKeywords) {
 		
 		float distance;

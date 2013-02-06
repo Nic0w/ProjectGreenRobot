@@ -34,6 +34,12 @@
 		);	
 	}
 	
+	function loadKeywordSelector(keywords) {
+		
+		
+		
+	}
+	
 	function progress(noob) {
 		
 		$("#progress").html(noob);
@@ -46,7 +52,8 @@
 	<table>
 		<tr>
 		<td>
-		Noob
+		<select id="keyword_selector" multiple>
+		</select>
 		</td>
 		<td>
 			<div id="progress"></div>
