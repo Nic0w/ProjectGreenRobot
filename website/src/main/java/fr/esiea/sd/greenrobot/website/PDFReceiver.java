@@ -1,5 +1,8 @@
 package fr.esiea.sd.greenrobot.website;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -58,8 +61,16 @@ public class PDFReceiver extends HttpServlet {
 	                // Process form file field (input type="file").
 	                String fieldname = item.getFieldName();
 	                String filename = item.getName();
-	                //InputStream filecontent = item.getInputStream();
-	                response.getWriter().printf("User is uploading a file of " + item.getSize() + " bytes named " + filename);
+
+	                File uploaded = File.createTempFile(filename, "greenrobot");
+	                FileOutputStream fileOut = new FileOutputStream(uploaded);
+	                
+	                fileOut.write(item.get());
+	                fileOut.flush();
+	                fileOut.close();
+	                
+	                response.getWriter().printf("User uploaded a file of " + item.getSize() + " bytes named " + filename +"\n <br\\>\n");
+	                response.getWriter().printf("File is now named " + uploaded.getName() + "(" + uploaded.getAbsolutePath() + ")\n");
 	            }
 	        }
 	    } catch (FileUploadException e) {
