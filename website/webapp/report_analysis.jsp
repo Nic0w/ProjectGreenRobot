@@ -39,6 +39,7 @@
 		
 		var selector = $("#keyword_selector");
 		var keyword;
+		keywords = keywords.array;
 		
 		for(var i in keywords) {
 			

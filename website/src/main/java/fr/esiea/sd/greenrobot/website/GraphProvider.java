@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
 import javax.servlet.ServletException;
@@ -101,7 +102,6 @@ public class GraphProvider extends HttpServlet {
 
 			 int progress;
 
-
 			 if(analyzer==null) { //PDDocument.load() not finished yet !
 
 				 out.
@@ -121,9 +121,21 @@ public class GraphProvider extends HttpServlet {
 			 }
 			 else {
 				 if(graphBuilder.isDone()) {
-
 					 //Loading & extraction are done !
-					 out.append("LOADED OMG !");
+					 
+					 KeywordsGraphBuilder builder = null;
+					 try {
+						builder = graphBuilder.get();
+					} catch (InterruptedException | ExecutionException e) {
+						throw new ServletException(e);
+					}
+					 
+					 out.
+					 append("<script type=\"text/javascript\">\n").
+					 append(" loadKeywordSelector({ array: " +builder.getAllKeywords().toString() + " });\n").
+					 append("</script>\n");
+					 
+					 //out.append("LOADED OMG !");
 				 } 
 				 else {
 					 progress = analyzer.getExtractionProgress();
