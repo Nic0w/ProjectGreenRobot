@@ -92,7 +92,7 @@
 			    },
 			    //Native canvas text styling
 			    Label: {
-			      type: 'Native', //Native or HTML
+			      type: 'HTML', //Native or HTML
 			      size: 10,
 			      style: 'bold'
 			    },
@@ -186,7 +186,7 @@
 					          "$type": "circle",
 					          "$dim": 10
 					        },  
-					    "adjacencies": ["aUniqueIdentifier"]   
+					    "adjacencies": []   
 				  }
 				  );
 			  // compute positions incrementally and animate.
