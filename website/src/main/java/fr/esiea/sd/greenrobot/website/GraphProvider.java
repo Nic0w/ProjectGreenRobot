@@ -1,5 +1,6 @@
 package fr.esiea.sd.greenrobot.website;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -183,9 +184,9 @@ public class GraphProvider extends HttpServlet {
 	  */
 	 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		BufferedReader reader = request.getReader();
 
-
-
+		response.getWriter().println(reader.readLine());
 	 }
 
 }

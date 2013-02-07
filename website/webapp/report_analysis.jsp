@@ -61,6 +61,9 @@
 					selected.push(inputs[i].value);
 			
 			console.log(selected);
+			
+			$.post(servlet, "{ selected: " + selected +"}");
+			
 		});
 
 	}
