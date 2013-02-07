@@ -77,7 +77,7 @@ public class GraphProvider extends HttpServlet {
 
 						 @Override
 						 public void onFailure(Throwable t) {
-
+							analyzers.remove(hash);
 						 }
 
 						 @Override
@@ -97,6 +97,10 @@ public class GraphProvider extends HttpServlet {
 		 }
 		 else if((hash=request.getParameter("hash"))!=null) {
 
+			 if(!analyzers.containsKey(hash)) {
+				 throw new ServletException("Failure : impossible to load the document !");
+			 }
+			 
 			 PDF_Analyzer analyzer = analyzers.get(hash);
 			 ListenableFuture<KeywordsGraphBuilder> graphBuilder = graphBuilders.get(hash);
 
