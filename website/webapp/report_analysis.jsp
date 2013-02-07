@@ -91,7 +91,7 @@
 			      lineWidth: 0.4
 			    },
 			    //Native canvas text styling
-			    /*Label: {
+			    Label: {
 			      type: labelType, //Native or HTML
 			      size: 10,
 			      style: 'bold'
@@ -107,7 +107,7 @@
 			        tip.innerHTML = "<div class=\"tip-title\">" + node.name + "</div>"
 			          + "<div class=\"tip-text\"><b>connections:</b> " + count + "</div>";
 			      }
-			    },*/
+			    },
 			    // Add node events
 			    Events: {
 			      enable: true,
@@ -176,7 +176,15 @@
 				      "some key": "some value",  
 				      "some other key": "some other value"  
 				     },  
-				    "adjacencies": []  
+				    "adjacencies": ["anOtherNode"]  
+				  }, {
+					    "id": "anOtherNode",  
+					    "name": "usually a nodes name",  
+					    "data": {  
+					      "some key": "some value",  
+					      "some other key": "some other value"  
+					     },  
+					    "adjacencies": ["aUniqueIdentifier"]   
 				  }
 				  );
 			  // compute positions incrementally and animate.
@@ -226,9 +234,10 @@
 		</td>
 		<td>
 			<div id="progress"></div>
-			<div id="graph"></div>
+			
 		</td>
 		</tr>
 	</table>
+	<div id="graph"></div>
 </body>
 </html>
