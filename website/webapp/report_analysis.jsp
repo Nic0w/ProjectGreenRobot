@@ -62,7 +62,7 @@
 			
 			console.log(selected);
 			
-			$.post(servlet, "{ selected: " + selected +"}");
+			$.post(servlet, JSON.stringify({ selected: selected }));
 			
 		});
 
