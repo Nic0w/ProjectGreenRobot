@@ -8,9 +8,10 @@
 <script src="/website-0.0.1-SNAPSHOT/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript">
 
-
 	var servlet = "/website-0.0.1-SNAPSHOT/GraphProvider";
 	var filename="<%= request.getParameter("file") %>";
+	
+	var selectedKeywords = [];
 	
 	function getProgress(hash) {
 		
@@ -36,6 +37,21 @@
 	
 	function loadKeywordSelector(keywords) {
 		
+		var selector = $("#keyword_selector");
+		var keyword;
+		
+		for(var i in keywords) {
+			
+			keyword = keywords[i];
+			
+			selector.append(
+					'<input type=\"checkbox\" name=\"keyword\" id=\"keyword\" value=\"'+ keyword +'\">'+ 
+						keyword + 
+					'<br>'
+				);
+		}
+		
+		$("");
 		
 		
 	}
@@ -52,8 +68,16 @@
 	<table>
 		<tr>
 		<td>
-		<select id="keyword_selector" multiple>
-		</select>
+			Choisissez des mots clés :
+		</td>
+		<td>
+			Graph :
+		</td>
+		</tr>
+		<tr>
+		<td>
+		<div id="keyword_selector" style="position: absolute; overflow: auto; height: 90%; width: 200px;">
+		</div>
 		</td>
 		<td>
 			<div id="progress"></div>
