@@ -3,6 +3,7 @@ package fr.esiea.sd.greenrobot.website;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -24,6 +25,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
 import fr.esiea.sd.greenrobot.pdf_analysis.PDF_Analyzer;
+import fr.esiea.sd.greenrobot.pdf_analysis.graph.Keyword;
 import fr.esiea.sd.greenrobot.pdf_analysis.graph.KeywordsGraphBuilder;
 
 /**
@@ -136,8 +138,22 @@ public class GraphProvider extends HttpServlet {
 					 
 					 out.
 					 append("<script type=\"text/javascript\">\n").
-					 append(" loadKeywordSelector({ array: " +builder.getAllKeywords().toString() + " });\n").
-					 append("</script>\n");
+					 append(" loadKeywordSelector({ array: ["); //+builder.getAllKeywords().toString() + " });\n").
+					 
+					 Iterator<Keyword> keywordIterator =  builder.getAllKeywords().iterator();
+					 
+					 String keyword;
+					 while(keywordIterator.hasNext()) {
+						 
+						 keyword = new String(keywordIterator.next().getWord().getBytes("UTF-8"), "UTF-8");
+						 out.append("'"+keyword+"'");
+						 if(keywordIterator.hasNext())
+							 out.append(',');			 
+					 }
+					 
+					 out.append("]}); \n");
+					 
+					 out.append("</script>\n");
 					 
 					 //out.append("LOADED OMG !");
 				 } 
