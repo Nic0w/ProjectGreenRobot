@@ -5,6 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Analyse du rapport</title>
+
+<link rel="stylesheet" href="/website-0.0.1-SNAPSHOT/css/base.css" media="screen" type="text/css" />
 <script src="/website-0.0.1-SNAPSHOT/js/jquery-1.9.1.min.js"></script>
 <script src="/website-0.0.1-SNAPSHOT/js/jit.js"></script>
 <script type="text/javascript">
@@ -16,6 +18,7 @@
 
 	function getProgress(hash) {
 
+		console.log("getProgress => " + hash);
 		$("#progress").load(servlet, 'hash=' + hash);
 	}
 
@@ -225,6 +228,7 @@
 			</div>
 
 			<div id="center-container">
+				<div id="progress"></div>
 				<div id="infovis"></div>
 			</div>
 		</div>
