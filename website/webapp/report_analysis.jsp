@@ -92,7 +92,7 @@
 			    },
 			    //Native canvas text styling
 			    Label: {
-			      type: "Native", //Native or HTML
+			      type: 'Native', //Native or HTML
 			      size: 10,
 			      style: 'bold'
 			    },
