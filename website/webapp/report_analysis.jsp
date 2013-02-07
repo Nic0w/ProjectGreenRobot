@@ -236,10 +236,10 @@
 		</td>
 		<td>
 			<div id="progress"></div>
-			
+			<div id="graph"></div>
 		</td>
 		</tr>
 	</table>
-	<div id="graph"></div>
+	
 </body>
 </html>
