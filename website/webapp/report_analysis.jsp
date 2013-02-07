@@ -6,7 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Analyse du rapport</title>
 
-<link rel="stylesheet" href="/website-0.0.1-SNAPSHOT/css/base.css" media="screen" type="text/css" />
+<link rel="stylesheet" href="/website-0.0.1-SNAPSHOT/css/base.css"
+	media="screen" type="text/css" />
 <script src="/website-0.0.1-SNAPSHOT/js/jquery-1.9.1.min.js"></script>
 <script src="/website-0.0.1-SNAPSHOT/js/jit.js"></script>
 <script type="text/javascript">
@@ -226,20 +227,20 @@
 			<div id="keyword_selector"
 				style="position: absolute; overflow: auto; height: 90%; width: 200px;">
 			</div>
-
-			<div id="center-container">
-				<div id="progress"></div>
-				<div id="infovis"></div>
-			</div>
 		</div>
 
-			<div id="right-container">
 
-				<div id="inner-details"></div>
-
-			</div>
-
-			<div id="log"></div>
+		<div id="center-container">
+			<div id="progress"></div>
+			<div id="infovis"></div>
 		</div>
+		<div id="right-container">
+
+			<div id="inner-details"></div>
+
+		</div>
+
+		<div id="log"></div>
+	</div>
 </body>
 </html>
