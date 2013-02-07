@@ -185,7 +185,7 @@
 				"$type" : "circle",
 				"$dim" : 10
 			},
-			"adjacencies" : []
+			"adjacencies" : ["aUniqueIdentifier"]
 		});
 		// compute positions incrementally and animate.
 		fd.computeIncremental({
