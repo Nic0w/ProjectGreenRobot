@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -17,7 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -57,8 +62,8 @@ public class GraphProvider extends HttpServlet {
 	 protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		 PrintWriter out = response.getWriter();
-		 
-	
+
+
 
 		 final String hash, file;
 
@@ -82,7 +87,7 @@ public class GraphProvider extends HttpServlet {
 
 						 @Override
 						 public void onFailure(Throwable t) {
-							analyzers.remove(hash);
+							 analyzers.remove(hash);
 						 }
 
 						 @Override
@@ -105,7 +110,7 @@ public class GraphProvider extends HttpServlet {
 			 if(!analyzers.containsKey(hash)) {
 				 throw new ServletException("Failure : impossible to load the document !");
 			 }
-			 
+
 			 PDF_Analyzer analyzer = analyzers.get(hash);
 			 ListenableFuture<KeywordsGraphBuilder> graphBuilder = graphBuilders.get(hash);
 
@@ -131,34 +136,34 @@ public class GraphProvider extends HttpServlet {
 			 else {
 				 if(graphBuilder.isDone()) {
 					 //Loading & extraction are done !
-					 
+
 					 KeywordsGraphBuilder builder = null;
 					 try {
-						builder = graphBuilder.get();
-					} catch (InterruptedException | ExecutionException e) {
-						throw new ServletException(e);
-					}
-					 
+						 builder = graphBuilder.get();
+					 } catch (InterruptedException | ExecutionException e) {
+						 throw new ServletException(e);
+					 }
+
 					 out.
 					 append("<script type=\"text/javascript\">\n").
 					 append(" loadKeywordSelector({ array: ["); //+builder.getAllKeywords().toString() + " });\n").
-					 
+
 					 Iterator<Keyword> keywordIterator =  builder.getAllKeywords().iterator();
-					 
+
 					 String keyword;
 					 while(keywordIterator.hasNext()) {
-						 
+
 						 keyword = keywordIterator.next().getWord();
 						 out.append("'"+keyword+"'");
 						 if(keywordIterator.hasNext())
 							 out.append(',');			 
 					 }
-					 
+
 					 out.
-					 	append("]}); \n").
-					 	append("loadGraph(); \n").
-					 	append("</script>\n");
-					 
+					 append("]}); \n").
+					 append("loadGraph(); \n").
+					 append("</script>\n");
+
 					 //out.append("LOADED OMG !");
 				 } 
 				 else {
@@ -184,9 +189,39 @@ public class GraphProvider extends HttpServlet {
 	  */
 	 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		BufferedReader reader = request.getReader();
+		 BufferedReader reader = request.getReader();
 
-		response.getWriter().println(reader.readLine());
+		 List<Keyword> selectedWords = Lists.newArrayList();
+
+		 String jsonData = reader.readLine();
+
+		 try {
+			 JSONObject jsonObject = new JSONObject(jsonData);
+
+			 String hash = jsonObject.getString("hash");
+
+			 KeywordsGraphBuilder graphBuilder = graphBuilders.get(hash).get();
+
+			 JSONArray array = jsonObject.getJSONArray("selected");
+
+			 int count = 0;
+			 for(Keyword k : graphBuilder.getAllKeywords()) {
+				 for(int i=0; i< array.length();i++)
+					 if(array.getString(i).contentEquals(k.getWord())) {
+						 selectedWords.add(k);
+						 count++;
+						 break;
+					 }
+				 if(count == array.length()) break;
+			 }
+
+			 
+			 
+
+		 } catch (JSONException | InterruptedException | ExecutionException e) {
+			 throw new ServletException(e);
+		 }
+
 	 }
 
 }

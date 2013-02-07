@@ -15,6 +15,8 @@
 	var servlet = "/website-0.0.1-SNAPSHOT/GraphProvider";
 	var filename="<%=request.getParameter("file")%>";
 
+	var _hash_;
+	
 	var selectedKeywords = [];
 
 	function getProgress(hash) {
@@ -30,6 +32,7 @@
 		}, function(data) {
 
 			console.log("Received hash : " + data);
+			_hash_ = data;
 			getProgress(data);
 		});
 	}
@@ -62,7 +65,7 @@
 			
 			console.log(selected);
 			
-			$.post(servlet, JSON.stringify({ selected: selected }));
+			$.post(servlet, JSON.stringify({ hash: _hash_, selected: selected }));
 			
 		});
 
@@ -180,7 +183,7 @@
 			}
 		});
 		// load JSON data.
-		fd.loadJSON({
+		fd.loadJSON([{
 			"id" : "aUniqueIdentifier",
 			"name" : "usually a nodes name",
 			"data" : {
@@ -198,7 +201,7 @@
 				"$dim" : 10
 			},
 			"adjacencies" : ["aUniqueIdentifier"]
-		});
+		}]);
 		// compute positions incrementally and animate.
 		fd.computeIncremental({
 			iter : 40,
