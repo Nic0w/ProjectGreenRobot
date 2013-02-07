@@ -1,7 +1,12 @@
 package fr.esiea.sd.greenrobot.website;
 
+import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+
+import fr.esiea.sd.greenrobot.pdf_analysis.PDF_Analyzer;
 
 public class ExtractionSession {
 
@@ -17,12 +22,12 @@ public class ExtractionSession {
         return new String(hexChars);
     }
 	
-	public static String getUniqueSessionHash(String filename) {
+	public static String getUniqueSessionHash(String filename, long seed) {
 		
 		byte md5[] = {};
 		
 		try {
-			md5 = MessageDigest.getInstance("MD5").digest((filename + "" + System.currentTimeMillis()).getBytes());
+			md5 = MessageDigest.getInstance("MD5").digest((filename + "" + seed).getBytes());
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}

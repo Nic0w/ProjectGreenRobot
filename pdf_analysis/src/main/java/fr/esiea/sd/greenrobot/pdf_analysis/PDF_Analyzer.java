@@ -37,7 +37,7 @@ import fr.esiea.sd.greenrobot.pdf_analysis.graph.KeywordsGraphBuilder;
  * @author nic0w
  *
  */
-public class PDF_Analyzer implements Callable<Object> {
+public class PDF_Analyzer implements Callable<KeywordsGraphBuilder> {
 
 	private final PDDocument pdfDocument;
 	private final HashMultimap<String, Integer> keywords;

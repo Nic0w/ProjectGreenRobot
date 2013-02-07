@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 import javax.servlet.ServletException;
@@ -15,88 +16,141 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import com.google.common.collect.Maps;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 
 import fr.esiea.sd.greenrobot.pdf_analysis.PDF_Analyzer;
+import fr.esiea.sd.greenrobot.pdf_analysis.graph.KeywordsGraphBuilder;
 
 /**
  * Servlet implementation class GraphProvider
  */
 @WebServlet("/GraphProvider")
 public class GraphProvider extends HttpServlet {
-	
+
 	private static final Map<String, PDF_Analyzer> analyzers = Maps.newHashMap();
-	
+	private static final Map<String, ListenableFuture<KeywordsGraphBuilder>> graphBuilders = Maps.newHashMap();
+
+	private static final ListeningExecutorService executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
+
 	private static final long serialVersionUID = 1L;
-	
-    /**
-     * Default constructor. 
-     */
-    public GraphProvider() {
-        // TODO Auto-generated constructor stub
-    }
- 
+
+	private static int dotLoadingAnim = 0;
+	/**
+	 * Default constructor. 
+	 */
+	public GraphProvider() {
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		PrintWriter out = response.getWriter();
-		String file, hash;
-		PDDocument pdfDoc;
-		PDF_Analyzer analyzer;
-		
-		if((file=request.getParameter("file"))!=null) {
-			
-			hash = ExtractionSession.getUniqueSessionHash(file);
-			
-			pdfDoc = PDDocument.load(new File("/tmp/tomcat6-tmp/"+file));
-			
-			analyzer = new PDF_Analyzer(pdfDoc);
-			
-			Executors.newSingleThreadExecutor().submit(analyzer);
-			
-			
-			analyzers.put(hash, analyzer);
-	
-			out.printf("%s", hash);
-		}
-		else if((hash=request.getParameter("hash"))!=null) {
-			
-			int progress = analyzers.get(hash).getExtractionProgress();
-			
-			if(progress<99) {
-				out.printf(
-					"<script type=\"text/javascript\">" +
-					"function update() { getProgress('%s'); } " +
-					" setTimeout(update, 500); "+
-					"</script>\n"+ 
-					"%d %% \n", hash, progress);
-				
-			}
-			else {
-				
-				out.
-					append("<script type=\"text/javascript\">").
-					append("</script>\n");
-				
-				
-				out.printf("LOADED OMG\n");
-			}
-		}
-		
-		out.flush();
-		out.close();
-				
-	}
+	 */		PDDocument pdfDoc;
+	 PDF_Analyzer analyzer;
+	 protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 PrintWriter out = response.getWriter();
 
-		
-		
-		
-	}
+		 final String hash, file;
+
+		 if((file=request.getParameter("file"))!=null) {
+
+			 hash = ExtractionSession.getUniqueSessionHash(file, System.currentTimeMillis());
+
+			 analyzers.put(hash, null);
+
+			 ListenableFuture<PDDocument> loadDoc = executor.submit(new Callable<PDDocument>() {
+				 @Override
+				 public PDDocument call() throws Exception {
+
+					 return PDDocument.load(new File("/tmp/tomcat6-tmp/"+file));
+				 }
+			 });
+
+			 Futures.addCallback(
+					 loadDoc, 
+					 new FutureCallback<PDDocument>() {
+
+						 @Override
+						 public void onFailure(Throwable t) {
+
+						 }
+
+						 @Override
+						 public void onSuccess(PDDocument pdfDoc) {
+
+							 PDF_Analyzer analyzer = new PDF_Analyzer(pdfDoc);
+
+							 analyzers.put(hash, analyzer);
+
+							 graphBuilders.put(hash, executor.submit(analyzer));
+
+						 }
+					 }, 
+					 executor);
+
+			 out.printf("%s", hash);
+		 }
+		 else if((hash=request.getParameter("hash"))!=null) {
+
+			 PDF_Analyzer analyzer = analyzers.get(hash);
+			 ListenableFuture<KeywordsGraphBuilder> graphBuilder = graphBuilders.get(hash);
+
+			 int progress;
+
+
+			 if(analyzer==null) { //PDDocument.load() not finished yet !
+
+				 out.
+				 append("<script type=\"text/javascript\">").
+				 append("function update() { getProgress('"+hash+"'); } ").
+				 append(" setTimeout(update, 500); ").
+				 append("</script>\n").
+				 append("Ouverture du ficher, merci de patienter");
+
+				 for(int i=0; i<dotLoadingAnim;i++)
+					 out.append('.');
+
+				 dotLoadingAnim++;
+				 dotLoadingAnim %=3;
+
+				 out.append('\n');
+			 }
+			 else {
+				 if(graphBuilder.isDone()) {
+
+					 //Loading & extraction are done !
+					 out.append("LOADED OMG !");
+				 } 
+				 else {
+					 progress = analyzer.getExtractionProgress();
+
+					 out.
+					 append("<script type=\"text/javascript\">").
+					 append("function update() { getProgress('"+hash+"'); } ").
+					 append(" setTimeout(update, 500); ").
+					 append("</script>\n").
+					 append("Extraction : " + progress + " %<br>\n");
+				 }
+			 }
+		 }
+
+		 out.flush();
+		 out.close();
+
+	 }
+
+	 /**
+	  * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	  */
+	 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+
+
+
+	 }
 
 }
