@@ -172,18 +172,20 @@
 			 fd.loadJSON(  {  
 				    "id": "aUniqueIdentifier",  
 				    "name": "usually a nodes name",  
-				    "data": {  
-				      "some key": "some value",  
-				      "some other key": "some other value"  
-				     },  
+				    "data": {
+				          "$color": "#83548B",
+				          "$type": "circle",
+				          "$dim": 10
+				        },  
 				    "adjacencies": ["anOtherNode"]  
 				  }, {
 					    "id": "anOtherNode",  
 					    "name": "usually a nodes name",  
-					    "data": {  
-					      "some key": "some value",  
-					      "some other key": "some other value"  
-					     },  
+					    "data": {
+					          "$color": "#83548B",
+					          "$type": "circle",
+					          "$dim": 10
+					        },  
 					    "adjacencies": ["aUniqueIdentifier"]   
 				  }
 				  );
