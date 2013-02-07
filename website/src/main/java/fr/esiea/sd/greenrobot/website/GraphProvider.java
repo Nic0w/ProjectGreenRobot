@@ -56,6 +56,8 @@ public class GraphProvider extends HttpServlet {
 	 protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		 PrintWriter out = response.getWriter();
+		 
+	
 
 		 final String hash, file;
 
@@ -145,7 +147,7 @@ public class GraphProvider extends HttpServlet {
 					 String keyword;
 					 while(keywordIterator.hasNext()) {
 						 
-						 keyword = new String(keywordIterator.next().getWord().getBytes(), "UTF-8");
+						 keyword = keywordIterator.next().getWord();
 						 out.append("'"+keyword+"'");
 						 if(keywordIterator.hasNext())
 							 out.append(',');			 
