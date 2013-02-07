@@ -15,7 +15,16 @@
 	var servlet = "/website-0.0.1-SNAPSHOT/GraphProvider";
 	var filename="<%=request.getParameter("file")%>";
 
-	var _hash_;
+	var _hash_, json =[{
+		"id" : "aUniqueIdentifier",
+		"name" : ".",
+		"data" : {
+			"$color" : "#83548B",
+			"$type" : "circle",
+			"$dim" : 10
+		},
+		"adjacencies" : [ ]
+	}];
 	
 	var selectedKeywords = [];
 
@@ -65,7 +74,11 @@
 			
 			console.log(selected);
 			
-			$.post(servlet, JSON.stringify({ hash: _hash_, selected: selected }));
+			$.post(servlet, JSON.stringify({ hash: _hash_, selected: selected }), function(data) {
+				
+				json = JSON.parse(data);
+				loadGraph();
+			});
 			
 		});
 
@@ -183,9 +196,9 @@
 			}
 		});
 		// load JSON data.
-		fd.loadJSON([{
+		fd.loadJSON(/*[{
 			"id" : "aUniqueIdentifier",
-			"name" : "usually a nodes name",
+			"name" : ".",
 			"data" : {
 				"$color" : "#83548B",
 				"$type" : "circle",
@@ -201,7 +214,7 @@
 				"$dim" : 10
 			},
 			"adjacencies" : ["aUniqueIdentifier"]
-		}]);
+		}]*/ json);
 		// compute positions incrementally and animate.
 		fd.computeIncremental({
 			iter : 40,
