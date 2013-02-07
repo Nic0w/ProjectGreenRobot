@@ -70,6 +70,10 @@ public class Keyword {
 		return false;
 	}
 
+	public Map<Keyword, Float> getNearbyKeywords() {
+		return this.nearbyKeywords;
+	}
+	
 	@Override
 	public String toString() {
 		return this.getWord() + "(" + this.occurences.size() +")";

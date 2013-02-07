@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multiset.Entry;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -215,8 +216,48 @@ public class GraphProvider extends HttpServlet {
 				 if(count == array.length()) break;
 			 }
 
+			 JSONArray jsonResponse = new JSONArray();
 			 
+			 JSONObject formatData = new JSONObject().
+					 put("$color", "#83548B").
+					 put("$type", "circle").
+					 put("$dim", 10);
 			 
+			 /*
+			  * 
+		{
+			"id" : "aUniqueIdentifier",
+			"name" : "usually a nodes name",
+			"data" : {
+				"$color" : "#83548B",
+				"$type" : "circle",
+				"$dim" : 10
+			},
+			"adjacencies" : [ "anOtherNode" ]
+		}
+			  * 
+			  */
+			 
+			 JSONObject node;
+			 JSONArray adjacencies, nodes = new JSONArray();
+			 int id=0;
+			 for(Keyword k : selectedWords) {
+				 node = new JSONObject().
+						 put("id", id++).
+						 put("name", k.getWord()).
+						 put("data", formatData);
+				 
+				 adjacencies = new JSONArray();
+				 
+				 for(Map.Entry<Keyword, Float> e : k.getNearbyKeywords().entrySet())
+					 adjacencies.put(e.getKey().getWord());
+		
+				 node.put("adjacencies", adjacencies);
+
+				 nodes.put(node);
+			 }
+			 
+			 response.getWriter().println(nodes.toString());
 
 		 } catch (JSONException | InterruptedException | ExecutionException e) {
 			 throw new ServletException(e);
