@@ -10,8 +10,7 @@
 <script type="text/javascript">
 
 	var servlet = "/website-0.0.1-SNAPSHOT/GraphProvider";
-	var filename="<%=request.getParameter("file")%>
-	";
+	var filename="<%=request.getParameter("file")%>";
 
 	var selectedKeywords = [];
 
