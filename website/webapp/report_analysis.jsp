@@ -169,7 +169,16 @@
 			    }
 			  });
 			  // load JSON data.
-			 fd.loadJSON({ adjacencies: []});
+			 fd.loadJSON(  {  
+				    "id": "aUniqueIdentifier",  
+				    "name": "usually a nodes name",  
+				    "data": {  
+				      "some key": "some value",  
+				      "some other key": "some other value"  
+				     },  
+				    "adjacencies": []  
+				  }
+				  );
 			  // compute positions incrementally and animate.
 			  fd.computeIncremental({
 			    iter: 40,
