@@ -91,7 +91,7 @@
 			      lineWidth: 0.4
 			    },
 			    //Native canvas text styling
-			    Label: {
+			    /*Label: {
 			      type: labelType, //Native or HTML
 			      size: 10,
 			      style: 'bold'
@@ -107,7 +107,7 @@
 			        tip.innerHTML = "<div class=\"tip-title\">" + node.name + "</div>"
 			          + "<div class=\"tip-text\"><b>connections:</b> " + count + "</div>";
 			      }
-			    },
+			    },*/
 			    // Add node events
 			    Events: {
 			      enable: true,
