@@ -30,6 +30,7 @@ import com.google.common.collect.Multimap;
 
 import fr.esiea.sd.greenrobot.pdf_analysis.extraction.ExtractionWatcher;
 import fr.esiea.sd.greenrobot.pdf_analysis.extraction.KeywordsExtractor;
+import fr.esiea.sd.greenrobot.pdf_analysis.graph.Keyword;
 import fr.esiea.sd.greenrobot.pdf_analysis.graph.KeywordFactory;
 import fr.esiea.sd.greenrobot.pdf_analysis.graph.KeywordsGraphBuilder;
 
@@ -91,6 +92,14 @@ public class PDF_Analyzer implements Callable<KeywordsGraphBuilder> {
 
 		Multimap<String, Integer> keywords = filtrateKeywords(extractKeywords(this.pdfDocument));
 
+		List<Keyword> list = Lists.newArrayList(
+				Iterables.transform(
+						keywords.asMap().entrySet(), 
+						KeywordFactory.asFunction()
+					)	
+				);
+		
+		
 //		System.out.println("Added " + keywords.asMap().keySet().size() + " unique words after filtering.");
 
 		return new KeywordsGraphBuilder(

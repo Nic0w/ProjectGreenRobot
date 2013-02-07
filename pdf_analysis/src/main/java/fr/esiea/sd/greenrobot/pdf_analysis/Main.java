@@ -13,6 +13,8 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.TreeMultiset;
 
+import fr.esiea.sd.greenrobot.pdf_analysis.graph.KeywordsGraphBuilder;
+
 /**
  * Hello world!
  *
@@ -30,7 +32,7 @@ public class Main {
   
     	System.out.println("Cores availables : " + Runtime.getRuntime().availableProcessors());
     	
-    	analyzer.call();
+    	KeywordsGraphBuilder graph = analyzer.call();
     	
 
     	
