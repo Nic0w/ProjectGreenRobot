@@ -169,7 +169,7 @@
 			    }
 			  });
 			  // load JSON data.
-			 // fd.loadJSON(json);
+			 fd.loadJSON({ adjacencies: []});
 			  // compute positions incrementally and animate.
 			  fd.computeIncremental({
 			    iter: 40,
