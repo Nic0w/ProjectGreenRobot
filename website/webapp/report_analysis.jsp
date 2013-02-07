@@ -57,11 +57,19 @@
 		
 	}
 	
+	function loadGraph() {
+		
+	}
+	
 	function progress(noob) {
 		
 		$("#progress").html(noob);
 		
 	}
+	
+	$(document).ready(function() {
+		loadReport();
+		});
 
 </script>
 </head>
@@ -82,6 +90,7 @@
 		</td>
 		<td>
 			<div id="progress"></div>
+			<div id="graph"></div>
 		</td>
 		</tr>
 	</table>

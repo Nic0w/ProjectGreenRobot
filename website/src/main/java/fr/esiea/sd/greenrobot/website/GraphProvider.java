@@ -151,9 +151,10 @@ public class GraphProvider extends HttpServlet {
 							 out.append(',');			 
 					 }
 					 
-					 out.append("]}); \n");
-					 
-					 out.append("</script>\n");
+					 out.
+					 	append("]}); \n").
+					 	append("loadGraph(); \n").
+					 	append("</script>\n");
 					 
 					 //out.append("LOADED OMG !");
 				 } 
