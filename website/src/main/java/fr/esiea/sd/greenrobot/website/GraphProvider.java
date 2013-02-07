@@ -145,7 +145,7 @@ public class GraphProvider extends HttpServlet {
 					 String keyword;
 					 while(keywordIterator.hasNext()) {
 						 
-						 keyword = new String(keywordIterator.next().getWord().getBytes("UTF-8"), "UTF-8");
+						 keyword = new String(keywordIterator.next().getWord().getBytes(), "UTF-8");
 						 out.append("'"+keyword+"'");
 						 if(keywordIterator.hasNext())
 							 out.append(',');			 

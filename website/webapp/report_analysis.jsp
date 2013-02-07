@@ -52,7 +52,13 @@
 				);
 		}
 		
-		$("");
+		$("input#keyword").change(
+				function(evt) {
+					
+					console.log($(this).val() + " state changed !");
+					
+				}
+			);
 		
 		
 	}
