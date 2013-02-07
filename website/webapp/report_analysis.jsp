@@ -175,10 +175,10 @@
 			    iter: 40,
 			    property: 'end',
 			    onStep: function(perc){
-			      Log.write(perc + '% loaded...');
+			      console.log(perc + '% loaded...');
 			    },
 			    onComplete: function(){
-			      Log.write('done');
+			    	console.log('done');
 			      fd.animate({
 			        modes: ['linear'],
 			        transition: $jit.Trans.Elastic.easeOut,
