@@ -52,7 +52,15 @@
 		$("input#keyword").change(function(evt) {
 
 			console.log($(this).val() + " state changed !");
-
+			
+			var selected = [];
+			var inputs = $("input#keyword").get();
+			
+			for(var i in inputs)
+				if(inputs[i].checked)
+					selected.push(inputs[i].value);
+			
+			console.log(selected);
 		});
 
 	}
