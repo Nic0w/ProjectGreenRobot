@@ -100,7 +100,7 @@ public class PDFReceiver extends HttpServlet {
 				if(runningTask.didRetrievalFail())
 					client.
 						execute("updateProgress").
-						addArg("text", "La récupération du document a échoué.").
+						addArg("text", "La récupération du document a échoué : " + runningTask.getFailure()).
 						breakUpdateLoop();
 				else 
 					if(runningTask.isAnalysisDone())

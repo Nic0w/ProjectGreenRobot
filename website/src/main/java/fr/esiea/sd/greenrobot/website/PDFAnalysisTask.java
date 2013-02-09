@@ -137,5 +137,9 @@ public class PDFAnalysisTask {
 		return this.futureGraphBuilder != null && !isAnalysisDone();
 	}
 
+	public Throwable getFailure() {
+		return this.failure;
+	}
+
 }
 

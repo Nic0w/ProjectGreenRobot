@@ -15,6 +15,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 
+import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
@@ -34,10 +35,14 @@ public class PDFRetrievalHandler {
 	}
 
 	public ListenableFuture<File> retrieveFile(final HttpServletRequest request, ListeningExecutorService executor) {
+		Preconditions.checkNotNull(request);
+		Preconditions.checkNotNull(executor);
 		
 		return executor.submit(new Callable<File>() {
 			@Override
 			public File call() throws Exception {
+				Preconditions.checkNotNull(request.getContentType());
+				
 				List<FileItem> formItems = fileUploadManager.parseRequest(request);
 				
 				if(formItems.size()>0) {
