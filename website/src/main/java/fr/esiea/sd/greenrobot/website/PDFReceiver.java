@@ -25,6 +25,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.FutureCallback;
@@ -97,11 +98,16 @@ public class PDFReceiver extends HttpServlet {
 			}
 			else {
 				
-				if(runningTask.didRetrievalFail())
+				if(runningTask.didRetrievalFail()) {
+					Throwable failure = runningTask.getFailure();
 					client.
-						execute("updateProgress").
-						addArg("text", "La récupération du document a échoué : " + runningTask.getFailure()).
-						breakUpdateLoop();
+					execute("updateProgress").
+					addArg("text", "La récupération du document a échoué ! ").
+					addArg("exception", "" + failure + " > " + failure.getMessage()).
+					addArg("stacktrace", failure.getStackTrace()).
+					breakUpdateLoop();
+				}
+					
 				else 
 					if(runningTask.isAnalysisDone())
 						client.execute("updateProgress").
