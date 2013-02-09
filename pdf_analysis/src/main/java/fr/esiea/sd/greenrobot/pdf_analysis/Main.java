@@ -2,12 +2,15 @@ package fr.esiea.sd.greenrobot.pdf_analysis;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.Scanner;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
+import org.apache.pdfbox.util.PDFTextStripperByArea;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -26,13 +29,79 @@ public class Main {
     	
     	pdfDoc = PDDocument.load(new File("bnp_2010.pdf"));
     	
-    	PDFTextStripper stripper = new PDFTextStripper();
+    //	pdfDoc.getDocument().
     	
-    	PDF_Analyzer analyzer = new PDF_Analyzer(pdfDoc);
+    	PDFTextStripper stripper = new PDFTextStripper();
+    
+    	PrintWriter  w= null;
+    	
+    	stripper.writeText(pdfDoc, new Writer() {
+			
+    		
+    		
+			@Override
+			public Writer append(char c) throws IOException {
+				System.out.println("a");
+				return this;
+			}
+
+			@Override
+			public Writer append(CharSequence csq, int start, int end)
+					throws IOException {
+				System.out.println("b");
+				return this;
+			}
+
+			@Override
+			public Writer append(CharSequence csq) throws IOException {
+				System.out.println("c");
+				return this;
+			}
+
+			@Override
+			public void write(char[] cbuf) throws IOException {
+				System.out.println("d");
+			}
+
+			@Override
+			public void write(int c) throws IOException {
+				System.out.println("e");
+			}
+
+			@Override
+			public void write(String arg0, int arg1, int arg2)
+					throws IOException {
+				System.out.println("f");
+			}
+
+			@Override
+			public void write(String str) throws IOException {
+				System.out.println("g");
+			}
+
+			@Override
+			public void write(char[] arg0, int arg1, int arg2) throws IOException {
+				System.out.println("h");			
+			}
+			
+			@Override
+			public void flush() throws IOException {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void close() throws IOException {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+        	
+    	/*PDF_Analyzer analyzer = new PDF_Analyzer(pdfDoc);
   
     	System.out.println("Cores availables : " + Runtime.getRuntime().availableProcessors());
     	
-    	KeywordsGraphBuilder graph = analyzer.call();
+    	KeywordsGraphBuilder graph = analyzer.call();*/
     	
 
     	

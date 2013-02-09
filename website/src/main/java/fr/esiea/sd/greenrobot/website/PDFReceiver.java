@@ -5,32 +5,68 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
 
+import javax.servlet.AsyncEvent;
+import javax.servlet.AsyncListener;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.pdfbox.pdmodel.PDDocument;
+
+import com.google.common.collect.Maps;
+import com.google.common.util.concurrent.AsyncFunction;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.gson.Gson;
+
+import fr.esiea.sd.greenrobot.pdf_analysis.concurrent.AsynchronousPDDocumentLoader;
+import fr.esiea.sd.greenrobot.pdf_analysis.graph.KeywordsGraphBuilder;
+import fr.esiea.sd.greenrobot.website.handler.PDFRetrievalHandler;
+import fr.esiea.sd.greenrobot.website.json.Response;
 
 /**
  * Servlet implementation class PDFReceiver
  */
 @WebServlet("/PDFReceiver")
 public class PDFReceiver extends HttpServlet {
+	
+	private enum RequestType {
+		
+		PDF_RETRIEVAL_REQUEST,
+		JSON_REQUEST
+	}
+	
 	private static final long serialVersionUID = 1L;
-       
+	
+	private static final ListeningExecutorService threadExecutor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
+    private static final Map<HttpSession, PDFAnalysisTask> tasks = Maps.newHashMap();
+    
+	private final PDFRetrievalHandler retrievalHandler;
+	private final AsynchronousPDDocumentLoader pdfLoader;
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
     public PDFReceiver() {
         super();
-        // TODO Auto-generated constructor stub
+        
+        this.retrievalHandler = new PDFRetrievalHandler();
+        this.pdfLoader = new AsynchronousPDDocumentLoader(threadExecutor);
     }
 
 	/**
@@ -45,42 +81,58 @@ public class PDFReceiver extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//POST Method is used when the user upload a file.
-		//response.getWriter().printf("User is uploading a file...");
 		
-		try {
-	        List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
-	        for (FileItem item : items) {
-	            if (item.isFormField()) {
-	                // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
-	                String fieldname = item.getFieldName();
-	                String fieldvalue = item.getString();
-	                // ... (do your job here)
-	            } else {
-	            	
-	                // Process form file field (input type="file").
-	                String fieldname = item.getFieldName();
-	                String filename = item.getName();
+		HttpSession userSession = request.getSession();
+		
+		switch(getRequestType(request)) {
+		case JSON_REQUEST:
 
-	                File uploaded = File.createTempFile("greenrobot", null);
-	                FileOutputStream fileOut = new FileOutputStream(uploaded);
-	                
-	                fileOut.write(item.get());
-	                fileOut.flush();
-	                fileOut.close();
-	                
-	                //response.getWriter().printf("User uploaded a file of " + item.getSize() + " bytes named " + filename +"\n <br\\>\n");
-	                //response.getWriter().printf("File is now named " + uploaded.getName() + "(" + uploaded.getAbsolutePath() + ")\n");
-	                
-	                response.sendRedirect("/website-0.0.1-SNAPSHOT/report_analysis.jsp?file="+uploaded.getName());
-	                break;
-	            }
-	        }
-	    } catch (FileUploadException e) {
-	        throw new ServletException("Cannot parse multipart request.", e);
-	    }
+			break;
+			
+		case PDF_RETRIEVAL_REQUEST: {
+
+			PDFAnalysisTask newTask = new PDFAnalysisTask();
+			
+			//Beware : Asynchronous black magic in use !
+			ListenableFuture<PDDocument> pdfDocRetrieval = Futures.transform(
+					this.retrievalHandler.retrieveFile(request, threadExecutor), //First we retrieve the File
+
+					new AsyncFunction<File, PDDocument>() { //Then we load the PDDocument
+
+						@Override
+						public ListenableFuture<PDDocument> apply(File pdfFile) throws Exception { 
+
+							return Futures.immediateFuture(PDDocument.load(pdfFile)); //This Future will be executed in the executor of our choice !
+							//return pdfLoader.loadAsync(pdfFile);
+						}
+					}, threadExecutor); //We choose here the executor we want.
+			
+			//newTask.
+			
+			tasks.put(userSession, newTask);
+			
+			new Response().
+				execute("updateProgress").
+				addArg("state", "OPENING_PDF_DOC").
+				writeTo(response.getWriter());
+			
+			break;
+		}
+
+		default:
+			/* DAFUQ §? */
+			//throw new DafuqException(new BugInTheMatrixException(new DividedByZeroException("Impossibruuuuuu")));
+			break;
+
+		}
+	}
+
+	private RequestType getRequestType(HttpServletRequest request) {
+	
+		if(request.getContentType().startsWith("multipart/form-data"))
+			return RequestType.PDF_RETRIEVAL_REQUEST;
 		
-		
+		return RequestType.JSON_REQUEST;
 	}
 
 }

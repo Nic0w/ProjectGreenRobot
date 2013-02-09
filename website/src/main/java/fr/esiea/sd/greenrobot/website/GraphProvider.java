@@ -18,13 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multiset.Entry;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -58,13 +54,13 @@ public class GraphProvider extends HttpServlet {
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */		PDDocument pdfDoc;
-	 PDF_Analyzer analyzer;
+	 */
 	 protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		 PrintWriter out = response.getWriter();
 
 
+		 request.getSession().setAttribute("plop", "plop");
 
 		 final String hash, file;
 
@@ -196,7 +192,7 @@ public class GraphProvider extends HttpServlet {
 
 		 String jsonData = reader.readLine();
 
-		 try {
+		 /*try {
 			 JSONObject jsonObject = new JSONObject(jsonData);
 
 			 String hash = jsonObject.getString("hash");
@@ -223,7 +219,7 @@ public class GraphProvider extends HttpServlet {
 					 put("$type", "circle").
 					 put("$dim", 10);
 			 
-			 /*
+			 
 			  * 
 		{
 			"id" : "aUniqueIdentifier",
@@ -236,7 +232,7 @@ public class GraphProvider extends HttpServlet {
 			"adjacencies" : [ "anOtherNode" ]
 		}
 			  * 
-			  */
+			  
 			 
 			 JSONObject node;
 			 JSONArray adjacencies, nodes = new JSONArray();
@@ -262,7 +258,7 @@ public class GraphProvider extends HttpServlet {
 		 } catch (JSONException | InterruptedException | ExecutionException e) {
 			 throw new ServletException(e);
 		 }
-
+*/
 	 }
 
 }
