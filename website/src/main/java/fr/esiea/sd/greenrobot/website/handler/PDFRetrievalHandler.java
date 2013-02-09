@@ -35,13 +35,14 @@ public class PDFRetrievalHandler {
 	}
 
 	public ListenableFuture<File> retrieveFile(final HttpServletRequest request, ListeningExecutorService executor) {
-		Preconditions.checkNotNull(request);
-		Preconditions.checkNotNull(executor);
+		Preconditions.checkNotNull(request, "Request is null.");
+		Preconditions.checkNotNull(request.getContentType(), "Content-Type is null.");
+		Preconditions.checkNotNull(executor, "Executor is null.");
 		
 		return executor.submit(new Callable<File>() {
 			@Override
 			public File call() throws Exception {
-				Preconditions.checkNotNull(request.getContentType());
+				Preconditions.checkNotNull(request.getContentType(), "Content-Type is null.");
 				
 				List<FileItem> formItems = fileUploadManager.parseRequest(request);
 				
