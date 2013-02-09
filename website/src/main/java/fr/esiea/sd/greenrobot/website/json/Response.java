@@ -30,6 +30,16 @@ public class Response {
 		this.arguments = Maps.newHashMap();
 	}
 	
+	public Response breakUpdateLoop() {
+		this.response.addProperty("break_loop", true);
+		return this;
+	}
+	
+	public Response launchTransition() {
+		this.response.addProperty("transition", true);
+		return this;
+	}
+	
 	public Response execute(String remoteJSFunction) {
 		
 		this.response.addProperty("execute", remoteJSFunction);

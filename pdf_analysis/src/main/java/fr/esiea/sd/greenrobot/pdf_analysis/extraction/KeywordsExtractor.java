@@ -38,7 +38,7 @@ public class KeywordsExtractor implements Callable<Multimap<String, Integer>>, P
 		
 		//Mono thread !
 		Future<Multimap<String, Integer>> result = unitExecutor.submit(new KeywordsExtractorUnit(this.pdfDocument, this));
-		
+		//TODO Parallelize this shit !
 		
 		return result.get();
 	}

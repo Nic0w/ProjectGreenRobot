@@ -8,24 +8,76 @@
 <script src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript">
 
+	function launchTransition() {
+		$("#content").fadeOut();
+		window.location = "<%=request.getContextPath()%>/report_analysis.jsp";
+	}
+	
+	function pollServer(data) {
+		
+		if(data.execute != undefined) {
+			window[data.execute](data.args);
+		}
+		
+		if(data.break_loop == undefined)
+		$.ajax({
+			url : "<%=request.getContextPath()%>/PDFReceiver", //server script to process data
+			type : 'POST',
+			success : function(data, textStatus, jqXHR) {
+
+				console.log("Request was successful :");
+				console.log("Response is : " + JSON.stringify(data));
+				
+				setTimeout(function() {
+					pollServer(data);
+				}, 
+				600);
+				
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log("error : " + errorThrown + " -> " + textStatus);
+			},
+			dataType : 'json'
+		});
+		else if(data.transition) {
+			setTimeout(launchTransition, 1000);
+		}
+		
+	}
+
+
 	function updateProgress(args) {
 		
-		console.log("Here we are in updateProgress function !");
-		console.log("state = " + args.state);
-		console.log("progress = " + args.process);
-		$("progress").removeAttr("value");
+		if(args.progress == undefined) {
+			$("progress").removeAttr("value"); /* reset the progress bar into undefined state */			
+		}
+		else {
+			console.log("Updating progress : " + args.progress);
+			
+			$("progress").attr({value:args.progress,max:100});
+			$("#percentage").html(args.progress + "%");
+		}
+		
+		if(args.text != undefined) {
+			console.log("Updating text : " + args.text);
+			
+			$("#status").html(args.text);
+		}
+		
+		
 	}
 
 	function progressHandlingFunction(e){
     	if(e.lengthComputable){
-        	$('progress').attr({value:e.loaded,max:e.total});
-        	$("span").html(Math.round((e.loaded/e.total)*100)+"%");
+        	$("progress").attr({value:e.loaded,max:e.total});
+        	$("#percentage").html(Math.round((e.loaded/e.total)*100)+"%");
     	}
 	}
 
 	function submitForms() {
 
 		console.log("Submitting form !");
+		
 		
 		var formData;
 		var progressHandler;
@@ -43,45 +95,46 @@
 
 		} else { /* The PDF File is downloaded from the given URL. */
 			console.log("User chose to use an URL.");
+		
+			$("#file_input")[0].disabled = true;
 			formData = new FormData($("#file_download")[0]);
 			progressHandler = function(e) {}; /* Empty function, because here we have to receive the progress from the server. */
 		}
 
 		$.ajax({
-			url : '<%=request.getContextPath()%>/PDFReceiver', //server script to process data
-					type : 'POST',
-					xhr : function() { // custom xhr
-						myXhr = $.ajaxSettings.xhr();
-						if (myXhr.upload) { // check if upload property exists
-							myXhr.upload.addEventListener('progress',
-									progressHandlingFunction, false); // for handling the progress of the upload
-						}
-						return myXhr;
-					},
-					//Ajax events
-					/*beforeSend : beforeSendHandler,*/
-					success : function(data, textStatus, jqXHR) {
-						
-						//$("#content").fadeOut();
-						console.log("Request was successful :");
-						console.log("Response is : " + JSON.stringify(data));
-						
-						window[data.execute].call(null, data.args);
-						
-					},
-					error : function(jqXHR, textStatus, errorThrown) {
-						console.log("error : " + errorThrown + " -> "
-								+ textStatus);
-					},
-					// Form data
-					data : formData,
-					dataType : 'json',
-					//Options to tell JQuery not to process data or worry about content-type
-					cache : false,
-					contentType : false,
-					processData : false
-				});
-		
+			url : "<%=request.getContextPath()%>/PDFReceiver", //server script to process data
+			type : 'POST',
+			xhr : function() { // custom xhr
+				myXhr = $.ajaxSettings.xhr();
+				if (myXhr.upload) { // check if upload property exists
+					myXhr.upload.addEventListener('progress',
+							progressHandlingFunction, false); // for handling the progress of the upload
+				}
+				return myXhr;
+			},
+			//Ajax events
+			/*beforeSend : beforeSendHandler,*/
+			success : function(data, textStatus, jqXHR) {
+
+				//$("#content").fadeOut();
+				console.log("Request was successful :");
+				console.log("Response is : " + JSON.stringify(data));
+				
+				pollServer(data);
+				
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log("error : " + errorThrown + " -> " + textStatus);
+			},
+			// Form data
+			data : formData,
+			dataType : 'json',
+			//Options to tell JQuery not to process data or worry about content-type
+			cache : false,
+			contentType : false,
+			processData : false
+		});
+
 	}
 
 	function toogleURLInput() {
@@ -112,7 +165,7 @@
 	$(document).ready(function() {
 
 		$("progress").attr("value", 0);
-		
+
 		$("#file_input").change(validateFileUpload);
 
 		$("#submit_button").click(submitForms);
@@ -151,9 +204,11 @@
 				</div>
 				<input type="button" id="submit_button" value="Traiter !">
 			</div>
-			<progress></progress>
 			<span id="status"></span>
-			
+			<progress></progress>
+			<span id="percentage"></span>
+
+
 		</div>
 	</div>
 </body>

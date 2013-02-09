@@ -239,9 +239,9 @@
 
 	}
 
-	$(document).ready(function() {
+	/*$(document).ready(function() {
 		loadReport();
-	});
+	});*/
 </script>
 </head>
 <body>

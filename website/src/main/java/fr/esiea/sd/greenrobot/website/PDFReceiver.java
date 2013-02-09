@@ -53,7 +53,7 @@ public class PDFReceiver extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static final ListeningExecutorService threadExecutor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
+	private static final ListeningExecutorService threadExecutor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(20));
     private static final Map<HttpSession, PDFAnalysisTask> tasks = Maps.newHashMap();
     
 	private final PDFRetrievalHandler retrievalHandler;
@@ -73,8 +73,7 @@ public class PDFReceiver extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//GET Method is used when we send an URL.
-		response.getWriter().printf("Downloading a PDF from somewhere !");
+		response.getWriter().printf("Hi, you !");
 	}
 
 	/**
@@ -82,16 +81,45 @@ public class PDFReceiver extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		HttpSession userSession = request.getSession();
+		final HttpSession userSession = request.getSession();
 		
 		switch(getRequestType(request)) {
 		case JSON_REQUEST:
-
+			
+			PDFAnalysisTask runningTask = tasks.get(userSession);
+			Response client = new Response();
+			
+			if(runningTask.isAnalyzing()) {
+				client.
+					execute("updateProgress").
+					addArg("text", "Analyse en cours...").
+					addArg("progress", runningTask.getAnalysisProgression());
+			}
+			else {
+				
+				if(runningTask.didRetrievalFail())
+					client.
+						execute("updateProgress").
+						addArg("text", "La récupération du document a échoué.").
+						breakUpdateLoop();
+				else 
+					if(runningTask.isAnalysisDone())
+						client.execute("updateProgress").
+						addArg("text", "Analyse terminée").
+						addArg("progress", 100).
+						breakUpdateLoop().
+						launchTransition();
+					
+			}
+			
+			client.writeTo(response.getWriter());
+			
 			break;
 			
 		case PDF_RETRIEVAL_REQUEST: {
 
-			PDFAnalysisTask newTask = new PDFAnalysisTask();
+			//We register a new PDFAnalysisTask to the user session
+			tasks.put(userSession, new PDFAnalysisTask(threadExecutor, true));
 			
 			//Beware : Asynchronous black magic in use !
 			ListenableFuture<PDDocument> pdfDocRetrieval = Futures.transform(
@@ -107,14 +135,36 @@ public class PDFReceiver extends HttpServlet {
 						}
 					}, threadExecutor); //We choose here the executor we want.
 			
-			//newTask.
+			Futures.addCallback(pdfDocRetrieval, new FutureCallback<PDDocument>() {
+				
+				private PDFAnalysisTask getTask(HttpSession userSession) {
+					return tasks.get(userSession);
+				}
+				
+				@Override
+				public void onFailure(Throwable t) {
+					getTask(userSession).setFailure(t);
+				}
+
+				@Override
+				public void onSuccess(PDDocument result) {
+					getTask(userSession).setDocument(result);
+				}
+			}, threadExecutor);
 			
-			tasks.put(userSession, newTask);
 			
+			//JSON style
 			new Response().
 				execute("updateProgress").
 				addArg("state", "OPENING_PDF_DOC").
+				addArg("text", "Ouverture du fichier...").
 				writeTo(response.getWriter());
+			
+			//Script style
+			/*response.getWriter().
+				append("function update() { updateProgress({text:'omg noob !'}); }\n").
+				append("setTimeout(update, 700);\n");
+				*/
 			
 			break;
 		}
@@ -129,6 +179,9 @@ public class PDFReceiver extends HttpServlet {
 
 	private RequestType getRequestType(HttpServletRequest request) {
 	
+		if(request.getContentType() == null)
+			return RequestType.JSON_REQUEST;
+		
 		if(request.getContentType().startsWith("multipart/form-data"))
 			return RequestType.PDF_RETRIEVAL_REQUEST;
 		
