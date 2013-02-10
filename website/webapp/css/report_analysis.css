@@ -1,0 +1,31 @@
+@CHARSET "UTF-8";
+
+#container {
+	display: none;
+}
+
+input.keyword_select {
+	display: none;
+}
+
+div.keyword {
+	padding: 3px;
+}
+
+div.selected {
+	background-color: #cdeb8e;
+	
+	border-style: solid;
+	border-color: #a5c956;
+	border-width: 1px;
+}
+
+div.keyword:hover {
+	
+	background-color: #cdeb8e;
+	
+	border-style: dashed;
+	border-color: #a5c956;
+	border-width: 1px;
+	
+}

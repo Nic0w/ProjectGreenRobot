@@ -1,3 +1,6 @@
+<%@page import="fr.esiea.sd.greenrobot.pdf_analysis.graph.KeywordsGraphBuilder"%>
+<%@page import="fr.esiea.sd.greenrobot.website.PDFAnalysisTask"%>
+<%@page import="fr.esiea.sd.greenrobot.pdf_analysis.graph.Keyword"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -6,10 +9,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Analyse du rapport</title>
 
-<link rel="stylesheet" href="/website-0.0.1-SNAPSHOT/css/base.css"
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/base.css"
 	media="screen" type="text/css" />
-<script src="/website-0.0.1-SNAPSHOT/js/jquery-1.9.1.min.js"></script>
-<script src="/website-0.0.1-SNAPSHOT/js/jit.js"></script>
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/report_analysis.css"
+	media="screen" type="text/css" />
+<script src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
+<script src="<%=request.getContextPath()%>/js/jit.js"></script>
 <script type="text/javascript">
 
 	var servlet = "/website-0.0.1-SNAPSHOT/GraphProvider";
@@ -239,20 +244,56 @@
 
 	}
 
-	/*$(document).ready(function() {
-		loadReport();
-	});*/
+	$(document).ready(function() {
+		
+		$("input[type=\"checkbox\"]").change(function (event) {
+			
+			$(this).parent().toggleClass("selected");
+			
+		});
+		
+		$("#container").fadeIn();
+		
+		/* loadKeywords(); */
+		
+		/* loadReport(); */
+	});
 </script>
 </head>
 <body>
 
 
-	<div id="container">
+	<div id="container" style="">
 
 		<div id="left-container">
 			Choisissez des mot-clés :
+			
 			<div id="keyword_selector"
 				style="position: absolute; overflow: auto; height: 90%; width: 200px;">
+			
+				<%
+					Object attr = session.getAttribute("task");
+				
+					if(attr != null) {
+						if(attr instanceof PDFAnalysisTask) {
+							PDFAnalysisTask task = (PDFAnalysisTask) attr;
+	
+							KeywordsGraphBuilder graphBuilder = task.getGraphBuilder();
+							
+							for(Keyword k : graphBuilder.getAllKeywords()) {
+								
+								String w = k.getWord();
+								
+								out.println("<div class=\"keyword\"><label for=\""+ w +"\">"+ w +"</label>");
+								out.println("<input type=\"checkbox\" class=\"keyword_select\" id=\""+ w +"\"></div>");
+								//out.println("<br>");
+								
+							}
+						}
+					}
+				
+				%>	
+				
 			</div>
 		</div>
 

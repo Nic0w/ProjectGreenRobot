@@ -124,9 +124,11 @@ public class PDFReceiver extends HttpServlet {
 			
 		case PDF_RETRIEVAL_REQUEST: {
 
+			
+			
 			//We register a new PDFAnalysisTask to the user session
 			tasks.put(userSession, new PDFAnalysisTask(threadExecutor, true));
-			
+			userSession.setAttribute("task", tasks.get(userSession));
 			//Beware : Asynchronous black magic in use !
 			ListenableFuture<PDDocument> pdfDocRetrieval = Futures.transform(
 					this.retrievalHandler.retrieveFile(request, threadExecutor), //First we retrieve the File
